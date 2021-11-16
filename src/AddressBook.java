@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class AddressBook  {
-
 	Scanner scannerObject = new Scanner(System.in);
 	Map<String, ContactPerson> contactList = new HashMap<String,ContactPerson>();
 	public String addressBookName;
@@ -163,7 +162,7 @@ public class AddressBook  {
 		
 	}
 
-
+	
 	public void deletePerson() {
 
 		System.out.println("Enter the first name of the person to be deleted");
@@ -178,6 +177,7 @@ public class AddressBook  {
 		
 	}
 
+
 	public void displayContents() {
 		
 		System.out.println("----- Contents of the Address Book "+this.getAddressBookName()+" -----");
@@ -185,7 +185,7 @@ public class AddressBook  {
 			ContactPerson person = contactList.get(eachContact);
 			System.out.println(person);
 		}
-		
+	
 
 	}
 
