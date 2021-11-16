@@ -2,13 +2,18 @@ package AddressBook;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
-public class AddressBook  {
+public class AddressBook {
 
 	Scanner scannerObject = new Scanner(System.in);
-	Map<String, ContactPerson> contactList = new HashMap<String,ContactPerson>();
+	public Map<String, ContactPerson> contactList = new HashMap<String,ContactPerson>();
+	public static HashMap<String, ArrayList<ContactPerson>> personByCity  = new HashMap<String, ArrayList<ContactPerson>>();
+	public static HashMap<String, ArrayList<ContactPerson>> personByState = new HashMap<String, ArrayList<ContactPerson>>();
 	public String addressBookName;
 	public boolean isPresent = false;
 	
@@ -33,7 +38,7 @@ public class AddressBook  {
 
 			System.out.println("\nChoose the operation you want to perform");
 			System.out.println(
-					"1.Add To Address Book\n2.Edit Existing Entry\n3.Display Address book\n4.Delete Contact\n5.Exit Address book System");
+					"1.Add To Address Book\n2.Edit Existing Entry\n3.Delete Contact\n4.Display Address book\n5.Display Sorted Address Book\n6.Exit Address book System");
 
 			switch (scannerObject.nextInt()) {
 			case 1:
@@ -43,16 +48,20 @@ public class AddressBook  {
 				editPerson();
 				break;
 			case 3:
-				displayContents();
-				break;
-			case 4:
 				deletePerson();
 				break;
-			case 5:
+			case 4:
+				displayContents();
+				break;
+			case 5 :
+				sortAddressBook();
+				break;
+			case 6:
 				moreChanges = false;
 				System.out.println("Exiting Address Book: "+this.getAddressBookName()+" !");
 
 			}
+
 
 		} while (moreChanges);
 	}
@@ -102,10 +111,33 @@ public class AddressBook  {
 			address.setState(state);
 			address.setZip(zipCode);
 			person.setAddress(address);
-			
+			addPersonToCity(person);
+			addPersonToState(person);
 			contactList.put(firstName.toLowerCase(), person);
 		}
 
+	}
+	
+	public void addPersonToCity(ContactPerson contact) {
+		if (personByCity.containsKey(contact.getAddress().getCity())) {
+			personByCity.get(contact.getAddress().getCity()).add(contact);
+		}
+		else {
+			ArrayList<ContactPerson> cityList = new ArrayList<ContactPerson>();
+			cityList.add(contact);
+			personByCity.put(contact.getAddress().getCity(), cityList);
+		}
+	}
+
+	public void addPersonToState(ContactPerson contact) {
+		if (personByState.containsKey(contact.getAddress().getState())) {			
+			personByState.get(contact.getAddress().getState()).add(contact);
+		}
+		else {
+			ArrayList<ContactPerson> stateList = new ArrayList<ContactPerson>();
+			stateList.add(contact);
+			personByState.put(contact.getAddress().getState(), stateList);
+		}
 	}
 
 	public void editPerson() {
@@ -163,7 +195,6 @@ public class AddressBook  {
 		
 	}
 
-
 	public void deletePerson() {
 
 		System.out.println("Enter the first name of the person to be deleted");
@@ -178,6 +209,7 @@ public class AddressBook  {
 		
 	}
 
+
 	public void displayContents() {
 		
 		System.out.println("----- Contents of the Address Book "+this.getAddressBookName()+" -----");
@@ -185,8 +217,23 @@ public class AddressBook  {
 			ContactPerson person = contactList.get(eachContact);
 			System.out.println(person);
 		}
-		System.out.println("-----------------------------------------");
+		
 
+	}
+	
+	public void sortAddressBook() {
+		
+		List<ContactPerson> sortedContactList = contactList.values().stream()
+				.sorted((firstperson, secondperson) -> firstperson.getFirstName().compareTo(secondperson.getFirstName()))
+				.collect(Collectors.toList());
+		
+		System.out.println("------ Sorted Address Book "+this.getAddressBookName()+" ------");
+		Iterator iterator = sortedContactList.iterator();
+		while (iterator.hasNext()) {
+			System.out.println(iterator.next());
+			System.out.println();
+		}
+	
 	}
 
 }
