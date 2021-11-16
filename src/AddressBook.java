@@ -1,5 +1,6 @@
 package AddressBook;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -8,16 +9,21 @@ public class AddressBook  {
 
 	Scanner scannerObject = new Scanner(System.in);
 	Map<String, ContactPerson> contactList = new HashMap<String,ContactPerson>();
-	public static String addressBookName;
-	boolean isPresent = false;
+	public String addressBookName;
+	public boolean isPresent = false;
 	
 	public String getAddressBookName() {
 		return addressBookName;
 	}
 
-	public static void setAddressBookName(String addressBookName) {
-		AddressBook.addressBookName = addressBookName;
+	public void setAddressBookName(String addressBookName) {
+		this.addressBookName = addressBookName;
 	}
+	
+	public ArrayList<ContactPerson> getContact() {
+		return new ArrayList<ContactPerson>(contactList.values());
+	}
+
 
 
 	public void operation() {
@@ -99,6 +105,7 @@ public class AddressBook  {
 			
 			contactList.put(firstName.toLowerCase(), person);
 		}
+
 	}
 
 	public void editPerson() {
@@ -156,7 +163,7 @@ public class AddressBook  {
 		
 	}
 
-	
+
 	public void deletePerson() {
 
 		System.out.println("Enter the first name of the person to be deleted");
@@ -171,15 +178,14 @@ public class AddressBook  {
 		
 	}
 
-
 	public void displayContents() {
 		
-		System.out.println("Contents of the Address Book "+this.getAddressBookName()+" -----");
+		System.out.println("----- Contents of the Address Book "+this.getAddressBookName()+" -----");
 		for (String eachContact : contactList.keySet()) {
 			ContactPerson person = contactList.get(eachContact);
 			System.out.println(person);
 		}
-	
+		
 
 	}
 
